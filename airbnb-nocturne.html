@@ -21,10 +21,11 @@
 
       const form = document.getElementsByTagName("form")[0];
       form.addEventListener('submit', (event) => {
-        event.preventDefault();
         submit();
+        const qs = new URLSearchParams(new FormData(form)).toString()
+        history.replaceState(null, null, window.location.pathname + '?' + qs);
+        event.preventDefault();
       })
-      // document.getElementById('submit').addEventListener('click', submit);
     }
 
     function submit() {
@@ -38,7 +39,7 @@
       item.innerHTML = `
 Hi ${name}!
 Your access code for 3041 Nocturne Unit ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">${code}#</span>
-(The # key is the UNLOCKING key on the keypad. It may be #, *, or other symbols)
+(The # key is the UNLOCKING key on the keypad.)
 
 It will be valid during this period:
 Check-in time ${from} 3pm 
@@ -57,7 +58,6 @@ Please read the house rules:
 Looking forward to hosting you at our place!
 Enjoy your stay!
 `
-      return false
     }
   </script>
 </head>
@@ -115,7 +115,8 @@ Enjoy your stay!
         </td>
       </tr>
       <tr>
-        <td span="2"><input type="submit" id="submit"/></td>
+        <td><input type="submit" id="submit"/></td>
+        <td><input type="reset" id="reset"/></td>
       </tr>
     </table>
   </form>
