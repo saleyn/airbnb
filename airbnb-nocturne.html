@@ -1,0 +1,125 @@
+<html>
+<head>
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <script>
+    window.onload = function() {
+      const query_string = window.location.search;
+      const params = new URLSearchParams(query_string);
+      const unit   = params.get("unit")
+      const name   = params.get("name")
+      const from   = params.get("from")
+      const to     = params.get("to")
+      const code   = params.get("code")
+      const garage = params.get("garage")
+
+      document.getElementById("unit").value     = unit
+      document.getElementById("name").value     = name
+      document.getElementById("dt-from").value  = from
+      document.getElementById("dt-to").value    = to
+      document.getElementById("code").value     = code
+      document.getElementById("garage").value   = garage
+
+      const form = document.getElementsByTagName("form")[0];
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submit();
+      })
+      // document.getElementById('submit').addEventListener('click', submit);
+    }
+
+    function submit() {
+      const item   = document.getElementById("text")
+      const unit   = document.getElementById("unit").value
+      const name   = document.getElementById("name").value
+      const from   = document.getElementById("dt-from").value
+      const to     = document.getElementById("dt-to").value
+      const code   = document.getElementById("code").value
+      const garage = document.getElementById("garage").value
+      item.innerHTML = `
+Hi ${name}!
+Your access code for 3041 Nocturne Unit ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">${code}#</span>
+(The # key is the UNLOCKING key on the keypad. It may be #, *, or other symbols)
+
+It will be valid during this period:
+Check-in time ${from} 3pm 
+Check-out time ${to} 10am.
+
+Here are the instructions for the garage:
+
+Please download [Smart Life] App <a href="https://app-support-us.smart321.com/smartlife">https://app-support-us.smart321.com/smartlife</a> and register.
+Go to "My > Home Management > Join Home “Nocturne Guest”", and enter the invitation code <span
+style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
+This invitation code is valid within 3 days from now, and please don't share it with others.
+
+Please read the house rules:
+http://tinyurl.com/4aruph2k
+
+Looking forward to hosting you at our place!
+Enjoy your stay!
+`
+      return false
+    }
+  </script>
+</head>
+<body class="">
+  <form action="#">
+    <table>
+      <tr>
+        <td>
+          Unit:
+        </td>
+        <td>
+          <select id="unit" name="unit">
+            <option code=""></option>
+            <option code="A">A</option>
+            <option code="B">B</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Name:
+        </td>
+        <td>
+          <input id="name" name="name" type=text"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          From:
+        </td>
+        <td>
+          <input id="dt-from" name="from" type=text"/>
+        </td>
+        <td>
+          To:
+        </td>
+        <td>
+          <input id="dt-to" name="to" type=text"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Code:
+        </td>
+        <td>
+          <input id="code" name="code"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Garage Code:
+        </td>
+        <td>
+          <input id="garage" name="garage"/>
+        </td>
+      </tr>
+      <tr>
+        <td span="2"><input type="submit" id="submit"/></td>
+      </tr>
+    </table>
+  </form>
+  <span id="text" style="white-space: pre; font-family: monospace;">
+  </span>
+</body>
+</html>
