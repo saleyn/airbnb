@@ -1,6 +1,6 @@
 <html>
 <head>
-  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <title>AirBnB Guest Check-In Instructions</title>
   <script>
     window.onload = function() {
       const query_string = window.location.search;
@@ -19,7 +19,8 @@
       document.getElementById("code").value     = code
       document.getElementById("garage").value   = garage
 
-      document.getElementsByTagName("form")[0].addEventListener('submit', (event) => {
+      const form = document.getElementsByTagName("form")[0];
+      form.addEventListener('submit', (event) => {
         submit();
         const qs = new URLSearchParams(new FormData(form)).toString()
         history.replaceState(null, null, window.location.pathname + '?' + qs);
@@ -32,6 +33,33 @@
     function hide() {
       document.getElementById("copy").style.display = 'none';
       document.getElementById("text").style.display = 'none';
+    }
+
+    function parse() {
+      const item = document.getElementById("reservation")
+      const rx   = /^\s*([^ ]+)[^\n]+\s*\n\s*([^\n]+)\s*\n([A-Z][a-z][a-z]) (\d+)\s[-–]\s([A-Z][a-z][a-z])?\s*(\d+).*/;
+      const res  = rx.exec(item.value);
+      if (res) {
+        if (res[2].includes("Beautiful 2BR/1BA"))
+          unit = "Unit B"
+        else if (res[2].includes("Beautiful 2BR/1.5BA"))
+          unit = "Unit A"
+        else if (res[2].includes("Your Dream Florida Getaway"))
+          unit = "house"
+        else
+          unit = ""
+
+        name = res[1]
+        from = `${res[3]} ${res[4]}`
+        to   = res[5] ? `${res[5]} ${res[6]}` : `${res[3]} ${res[6]}`
+
+        document.getElementById("unit").value     = unit
+        document.getElementById("name").value     = name
+        document.getElementById("dt-from").value  = from
+        document.getElementById("dt-to").value    = to
+        document.getElementById("code").value     = ''
+        document.getElementById("garage").value   = ''
+      }
     }
 
     function copyToClipboard(id) {
@@ -53,12 +81,12 @@
       const garage = document.getElementById("garage").value
       item.innerHTML =
 `Hi ${name}!
-Your access code for 3041 Nocturne Unit ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">${code}#</span>
+Your access code for 3041 Nocturne ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">${code}#</span>
 (The # key is the UNLOCKING key on the keypad.)
 
 It will be valid during this period:
-Check-in time ${from} 3pm.
-Check-out time ${to} 10am.
+Check-in time ${from}, 3pm.
+Check-out time ${to}, 10am.
 
 Here are the instructions for the garage:
 
@@ -75,7 +103,6 @@ Enjoy your stay!
 `
       document.getElementById("copy").style.display = "inline-block";
       document.getElementById("text").style.display = "inline-block";
-      //copy.style.visibility = "visible";
     }
   </script>
   <style>
@@ -108,17 +135,32 @@ Enjoy your stay!
   </style>
 </head>
 <body class="">
+  <h2>AirBnB Guest Check-In Instructions</h2>
   <form action="#">
     <table style="border: 3px solid gray;">
+      <tr>
+        <td>
+          Reservation:
+        </td>
+        <td colspan="2">
+          <textarea id="reservation" rows="3" cols="50"
+            title="From the 'Reservations / Details' page copy 3 lines beginning with the guest's name"
+          /></textarea>
+        </td>
+        <td>
+          <div class="button" onclick="parse()">Parse</div>
+        </td>
+      </tr>
       <tr>
         <td>
           Unit:
         </td>
         <td>
-          <select id="unit" name="unit">
-            <option code=""></option>
-            <option code="A">A</option>
-            <option code="B">B</option>
+          <select id="unit" name="unit" required>
+            <option value=""></option>
+            <option value="house">House</option>
+            <option value="Unit A">Unit A</option>
+            <option value="Unit B">Unit B</option>
           </select>
         </td>
       </tr>
@@ -127,7 +169,7 @@ Enjoy your stay!
           Name:
         </td>
         <td>
-          <input id="name" name="name" type=text" autocomplete="off"/>
+          <input id="name" name="name" type=text" autocomplete="off" required/>
         </td>
       </tr>
       <tr>
@@ -135,13 +177,13 @@ Enjoy your stay!
           From:
         </td>
         <td>
-          <input id="dt-from" name="from" type=text" autocomplete="off"/>
+          <input id="dt-from" name="from" type=text" autocomplete="off" required/>
         </td>
         <td>
           To:
         </td>
         <td>
-          <input id="dt-to" name="to" type=text" autocomplete="off"/>
+          <input id="dt-to" name="to" type=text" autocomplete="off" required/>
         </td>
       </tr>
       <tr>
@@ -149,7 +191,7 @@ Enjoy your stay!
           Code:
         </td>
         <td>
-          <input id="code" name="code" autocomplete="off"/>
+          <input id="code" name="code" autocomplete="off" required/>
         </td>
       </tr>
       <tr>
@@ -157,7 +199,7 @@ Enjoy your stay!
           Garage Code:
         </td>
         <td>
-          <input id="garage" name="garage" autocomplete="off"/>
+          <input id="garage" name="garage" autocomplete="off" required/>
         </td>
       </tr>
       <tr style="border-spacing: 0 2em; border-collapse:separate;">
