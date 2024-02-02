@@ -72,13 +72,19 @@
     }
 
     function submit() {
-      const item   = document.getElementById("text")
-      const unit   = document.getElementById("unit").value
-      const name   = document.getElementById("name").value
-      const from   = document.getElementById("dt-from").value
-      const to     = document.getElementById("dt-to").value
-      const code   = document.getElementById("code").value
-      const garage = document.getElementById("garage").value
+      const item    = document.getElementById("text")
+      const unit    = document.getElementById("unit").value
+      const name    = document.getElementById("name").value
+      const from    = document.getElementById("dt-from").value
+      const to      = document.getElementById("dt-to").value
+      const code    = document.getElementById("code").value
+      const garage  = document.getElementById("garage").value
+      const side    = unit == 'Unit A' ? 'right' : 'left'
+      const parkurl = unit == 'Unit A' ? 'http://tinyurl.com/2xenctpe'
+                                       : 'http://tinyurl.com/yc3k9m82'
+      const parking = unit == 'house'
+                    ? ''
+                    : `\nYou can park your car on the ${side} side of the garage and the driveway: ${parkurl}\n`
       item.innerHTML =
 `Hi ${name}!
 Your access code for 3041 Nocturne ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
@@ -98,7 +104,7 @@ This invitation code is valid within 3 days from now, and please don't share it 
 
 Please read the house rules:
 <a href="http://tinyurl.com/4aruph2k">http://tinyurl.com/4aruph2k</a>
-
+${parking}
 Looking forward to hosting you at our place!
 Enjoy your stay!
 `
