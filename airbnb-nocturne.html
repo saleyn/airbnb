@@ -83,8 +83,8 @@
       const parkurl = unit == 'Unit A' ? 'http://tinyurl.com/2xenctpe'
                                        : 'http://tinyurl.com/yc3k9m82'
       const parking = unit == 'house'
-                    ? ''
-                    : `\nYou can park your car on the ${side} side of the garage and the driveway: ${parkurl}\n`
+        ? ''
+        : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl}">${parkurl}</a>\n`
       item.innerHTML =
 `Hi ${name}!
 Your access code for 3041 Nocturne ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
