@@ -44,7 +44,7 @@
           unit = "Unit B"
         else if (res[2].includes("Beautiful 2BR/1.5BA"))
           unit = "Unit A"
-        else if (res[2].includes("Your Dream Florida Getaway"))
+        else if (res[2].includes("Your Dream Dual-Zone Getaway"))
           unit = "house"
         else
           unit = ""
@@ -85,10 +85,13 @@
       const parking = unit == 'house'
         ? ''
         : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl}">${parkurl}</a>\n`
+      const passthr = unit == 'house'
+        ? ' All inside door locks have been set to the "pass-through" mode, and do not require an access code.'
+        : ''
       item.innerHTML =
 `Hi ${name}!
 Your access code for 3041 Nocturne ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
-(Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)
+(Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
 
 It will be valid during this period:
 Check-in time ${from}, 3pm.
