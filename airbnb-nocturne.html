@@ -84,13 +84,13 @@
                                        : 'http://tinyurl.com/nocturne-gb'
       const parking = unit == 'house'
         ? ''
-        : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl}">${parkurl}</a>\n`
+        : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl} target="_blank"">${parkurl}</a>\n`
       const passthr = unit == 'house'
         ? ' All inside door locks have been set to the "pass-through" mode, and do not require an access code.'
         : ''
       item.innerHTML =
 `Hi ${name}!
-Your access code for <a href="https://maps.app.goo.gl/QdqboXMY8entshxRA">3041 Nocturne ${unit}</a> is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
+Your access code for <a href="https://maps.app.goo.gl/QdqboXMY8entshxRA" target="_blank">3041 Nocturne ${unit}</a> is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
 (Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
 
 It will be valid during this period:
@@ -99,13 +99,13 @@ Check-out time ${to}, 10am.
 
 Here are the instructions for the garage:
 
-Please download [<a href="https://app-support-us.smart321.com/smartlife">Smart Life App</a>] and register an account using your email address (during registration you will receive a verification code used to validate your account).
-Step-by-step instructions <a href="https://tinyurl.com/nocturne-garage">are provided here</a>.
+Please download [<a href="https://app-support-us.smart321.com/smartlife" target="_blank">Smart Life App</a>] and register an account using your email address (during registration you will receive a verification code used to validate your account).
+Step-by-step instructions <a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>.
 In the Smart Life app go to "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span
 style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
 This invitation code is valid within 3 days from now, and please don't share it with others.
 ${parking}
-Please read <a href="http://tinyurl.com/nocturne-rules">the house rules</a>.
+Please read <a href="http://tinyurl.com/nocturne-rules" target="_blank">the house rules</a>.
 
 Looking forward to hosting you at our place!
 Enjoy your stay!
