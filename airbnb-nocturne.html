@@ -80,8 +80,8 @@
       const code    = document.getElementById("code").value
       const garage  = document.getElementById("garage").value
       const side    = unit == 'Unit A' ? 'RIGHT' : 'LEFT'
-      const parkurl = unit == 'Unit A' ? 'http://tinyurl.com/yxr996ua'
-                                       : 'http://tinyurl.com/243b3rf4'
+      const parkurl = unit == 'Unit A' ? 'http://tinyurl.com/nocturne-ga'
+                                       : 'http://tinyurl.com/nocturne-gb'
       const parking = unit == 'house'
         ? ''
         : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl}">${parkurl}</a>\n`
@@ -90,7 +90,7 @@
         : ''
       item.innerHTML =
 `Hi ${name}!
-Your access code for 3041 Nocturne ${unit} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
+Your access code for <a href="https://maps.app.goo.gl/QdqboXMY8entshxRA">3041 Nocturne ${unit}</a> is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
 (Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
 
 It will be valid during this period:
@@ -105,7 +105,7 @@ In the Smart Life app go to "Me > Home Management > Join Home â€œNocturne Guestâ
 style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
 This invitation code is valid within 3 days from now, and please don't share it with others.
 ${parking}
-Please read <a href="https://tinyurl.com/nocturne-rules">the house rules</a>.
+Please read <a href="http://tinyurl.com/nocturne-rules">the house rules</a>.
 
 Looking forward to hosting you at our place!
 Enjoy your stay!
