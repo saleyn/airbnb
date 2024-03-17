@@ -79,6 +79,7 @@
       const to      = document.getElementById("dt-to").value
       const code    = document.getElementById("code").value
       const garage  = document.getElementById("garage").value
+      const url     = document.getElementById("url").checked
       const side    = unit == 'Unit A' ? 'RIGHT' : 'LEFT'
       const parkurl = unit == 'Unit A' ? 'http://tinyurl.com/nocturne-ga'
                                        : 'http://tinyurl.com/nocturne-gb'
@@ -86,11 +87,24 @@
         ? ''
         : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl} target="_blank"">${parkurl}</a>\n`
       const passthr = unit == 'house'
-        ? ' All inside door locks have been set to the "pass-through" mode, and do not require an access code.'
+        ? ' All inside door locks have been set to the "pass-through" mode, and do not require to enter the access code.'
         : ''
+      const nocturne = url
+        ? `<a href="https://maps.app.goo.gl/QdqboXMY8entshxRA" target="_blank">3041 Nocturne ${unit}</a>`
+        : `3041 Nocturne ${unit} (https://maps.app.goo.gl/QdqboXMY8entshxRA)`
+      const smartapp = url
+        ? `[<a href="https://app-support-us.smart321.com/smartlife" target="_blank">Smart Life App</a>]`
+        : `Smart Life App (https://app-support-us.smart321.com/smartlife)`
+      const garinstr = url
+        ? `<a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>`
+        : `are provided here (https://tinyurl.com/nocturne-garage)`
+      const houserules = url
+        ? `<a href="http://tinyurl.com/nocturne-rules" target="_blank">the house rules</a>`
+        : `the house rules (http://tinyurl.com/nocturne-rules)`
+
       item.innerHTML =
 `Hi ${name}!
-Your access code for <a href="https://maps.app.goo.gl/QdqboXMY8entshxRA" target="_blank">3041 Nocturne ${unit}</a> is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
+Your access code for ${nocturne} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
 (Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
 
 It will be valid during this period:
@@ -99,13 +113,13 @@ Check-out time ${to}, 10am.
 
 Here are the instructions for the garage:
 
-Please download [<a href="https://app-support-us.smart321.com/smartlife" target="_blank">Smart Life App</a>] and register an account using your email address (during registration you will receive a verification code used to validate your account).
-Step-by-step instructions <a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>.
+Please download ${smartapp} and register an account using your email address (during registration you will receive a verification code used to validate your account).
+Step-by-step instructions ${garinstr}.
 In the Smart Life app go to "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span
 style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
 This invitation code is valid within 3 days from now, and please don't share it with others.
 ${parking}
-Please read <a href="http://tinyurl.com/nocturne-rules" target="_blank">the house rules</a>.
+Please read ${houserules}.
 
 Looking forward to hosting you at our place!
 Enjoy your stay!
@@ -149,9 +163,17 @@ Enjoy your stay!
     <table style="border: 3px solid gray;">
       <tr>
         <td>
+          Embed URLs:
+        </td>
+        <td colspan="3">
+          <input id="url" type="checkbox" title="Embed URLS"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
           Reservation:
         </td>
-        <td colspan="2">
+        <td colspan="3">
           <textarea id="reservation" rows="3" cols="50"
             title="From the 'Reservations / Details' page copy 3 lines beginning with the guest's name"
           /></textarea>
@@ -177,7 +199,7 @@ Enjoy your stay!
         <td>
           Name:
         </td>
-        <td>
+        <td colspan="2">
           <input id="name" name="name" type=text" autocomplete="off" required/>
         </td>
       </tr>
