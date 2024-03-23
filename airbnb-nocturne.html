@@ -33,8 +33,12 @@
     }
 
     function hide() {
-      document.getElementById("copy").style.display = 'none';
-      document.getElementById("text").style.display = 'none';
+      document.getElementById("title1").style.display = 'none';
+      document.getElementById("title2").style.display = 'none';
+      document.getElementById("copy1").style.display  = 'none';
+      document.getElementById("text1").style.display  = 'none';
+      document.getElementById("copy2").style.display  = 'none';
+      document.getElementById("text2").style.display  = 'none';
     }
 
     function parse() {
@@ -73,20 +77,58 @@
       window.getSelection().removeAllRanges(); // to deselect
     }
 
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function toISOString(date) {
+      const tzo = -date.getTimezoneOffset()
+      const dif = tzo >= 0 ? '+' : '-'
+
+      return date.getFullYear() +
+          '-' + pad(date.getMonth() + 1) +
+          '-' + pad(date.getDate()) +
+          ' ' + pad(date.getHours()) +
+          ':' + pad(date.getMinutes()) +
+          ':' + pad(date.getSeconds()) +
+          dif + pad(Math.floor(Math.abs(tzo) / 60)) +
+          ':' + pad(Math.abs(tzo) % 60)
+    }
+
+    function formatDate(mon_day, time) {
+      const tm = Number(time.replace(/\wm/, "")) + (time.indexOf("pm") < 0 ? 0 : 12)
+      const dt = new Date(Date.parse(mon_day + `, ${new Date().getFullYear()} ${pad(tm)}:00`))
+      return toISOString(dt)
+    }
+
     function submit() {
-      const item    = document.getElementById("text")
-      const unit    = document.getElementById("unit").value
-      const name    = document.getElementById("name").value
-      const from    = document.getElementById("dt-from").value
-      const to      = document.getElementById("dt-to").value
-      const code    = document.getElementById("code").value
-      const garage  = document.getElementById("garage").value
-      const url     = document.getElementById("url").checked
-      const side    = unit == 'Unit A' ? 'RIGHT' : 'LEFT'
-      const parkurl = unit == 'Unit A' ? 'http://tinyurl.com/nocturne-ga'
-                                       : 'http://tinyurl.com/nocturne-gb'
-      const checkin = unit == 'house'  ? '4pm' : '3pm'
-      const parking = unit == 'house'
+      const text1    = document.getElementById("text1")
+      const text2    = document.getElementById("text2")
+      const unit     = document.getElementById("unit").value
+      const name     = document.getElementById("name").value
+      const from     = document.getElementById("dt-from").value
+      const to       = document.getElementById("dt-to").value
+      const code     = document.getElementById("code").value
+      const garage   = document.getElementById("garage").value
+      const url      = document.getElementById("url").checked
+      const side     = unit == 'Unit A' ? 'RIGHT' : 'LEFT'
+      const parkurl  = unit == 'Unit A' ? 'http://tinyurl.com/nocturne-ga'
+                                        : 'http://tinyurl.com/nocturne-gb'
+      const checkin  = unit == 'house'  ? '4pm' : '3pm'
+      const checkout = '10am'
+      const starttm  = formatDate(from, checkin)
+      const endtm    = formatDate(to,   checkout)
+      const locks    = unit == 'house'  ? [541358, 541356, 541354]
+                     : unit == 'Unit A' ? [541358, 541354]
+                                        : [541358, 541356]
+      //            Lock             │    Group    │ GroupID │  LockID
+      // Nocturne Garage into Unit A │ Nocturne A  │  541354 │ 11062924
+      // Nocturne Unit A             │ Nocturne A  │  541354 │ 11061662
+      // Nocturne Unit B             │ Nocturne B  │  541356 │ 11046340
+      // Nocturne Front Door         │ Nocturne AB │  541358 │ 11045754
+      const passage  = unit == 'house'
+                     ? '\nNocturne.TTLock.API.set_passage_mode([11062924, 11061662, 11046340], true)\n'
+                     : ''
+                      
+      const parking  = unit == 'house'
         ? ''
         : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl} target="_blank"">${parkurl}</a>\n`
       const passthr = unit == 'house'
@@ -105,14 +147,14 @@
         ? `<a href="http://tinyurl.com/nocturne-rules" target="_blank">the house rules</a>`
         : `the house rules (http://tinyurl.com/nocturne-rules)`
 
-      item.innerHTML =
+      text1.innerHTML =
 `Hi ${name}!
 Your access code for ${nocturne} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
 (Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
 
 It will be valid during this period:
 Check-in  time ${from}, ${checkin}.
-Check-out time ${to}, 10am.
+Check-out time ${to}, ${checkout}.
 
 Here are the instructions for the garage:
 
@@ -127,8 +169,16 @@ Please read ${houserules}.
 Looking forward to hosting you at our place!
 Enjoy your stay!
 `
-      document.getElementById("copy").style.display = "inline-block";
-      document.getElementById("text").style.display = "inline-block";
+      text2.innerHTML =
+`
+Nocturne.TTLock.API.add_passcode("${name}", "${starttm}", "${endtm}", nil, [${locks}])${passage}
+`
+      document.getElementById("title1").style.display = "inline-block";
+      document.getElementById("title2").style.display = "inline-block";
+      document.getElementById("copy1").style.display  = "inline-block";
+      document.getElementById("text1").style.display  = "inline-block";
+      document.getElementById("copy2").style.display  = "inline-block";
+      document.getElementById("text2").style.display  = "inline-block";
     }
   </script>
   <style>
@@ -245,7 +295,12 @@ Enjoy your stay!
       </tr>
     </table>
   </form>
-  <div id="copy" class="button" title="Click to copy" onclick="copyToClipboard('text')">
+
+  <div id="title1" style="height:24">
+    <h3>Tenant Message</h3>
+  </div>
+
+  <div id="copy1" class="button" title="Click to copy" onclick="copyToClipboard('text1')">
     <svg xmlns="http://www.w3.org/2000/svg" style="width:24; height:24;"
          fill="none" viewBox="0 0 24 24"
          stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -263,6 +318,30 @@ Enjoy your stay!
     </svg>
   </div>
   <br/>
-  <div class="text" id="text" style="white-space: pre; font-family: monospace;"></div>
+  <div id="text1" class="text" style="white-space: pre; font-family: monospace;"></div>
+
+  <div id="title2" style="height:24">
+    <h3>Provision Passcode</h3>
+  </div>
+
+  <div id="copy2" class="button" title="Click to copy" onclick="copyToClipboard('text2')">
+    <svg xmlns="http://www.w3.org/2000/svg" style="width:24; height:24;"
+         fill="none" viewBox="0 0 24 24"
+         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9
+        15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0
+        2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0
+        0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0
+        .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8
+        0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8
+        0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0
+        0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125
+        1.125h9.75c.621 0 1.125-.504
+        1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75
+        12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/>
+    </svg>
+  </div>
+  <br/>
+  <div id="text2" class="text" style="white-space: pre; font-family: monospace;"></div>
 </body>
 </html>
