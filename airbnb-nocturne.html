@@ -112,6 +112,7 @@
       const side     = unit == 'Unit A' ? 'RIGHT' : 'LEFT'
       const parkurl  = unit == 'Unit A' ? 'http://tinyurl.com/nocturne-ga'
                                         : 'http://tinyurl.com/nocturne-gb'
+      const codex    = code == "" ? "nil" : `"${code}"`
       const checkin  = unit == 'house'  ? '4pm' : '3pm'
       const checkout = '10am'
       const starttm  = formatDate(from, checkin)
@@ -170,13 +171,14 @@ Looking forward to hosting you at our place!
 Enjoy your stay!
 `
       text2.innerHTML =
-`
-Nocturne.TTLock.API.add_passcode("${name}", "${starttm}", "${endtm}", nil, [${locks}])${passage}
-`
-      document.getElementById("title1").style.display = "inline-block";
+`Nocturne.TTLock.API.add_passcode("${name}", "${starttm}", "${endtm}", ${codex}, [${locks}])${passage}`
+
+      if (code != '') {
+        document.getElementById("title1").style.display = "inline-block";
+        document.getElementById("copy1").style.display  = "inline-block";
+        document.getElementById("text1").style.display  = "inline-block";
+      }
       document.getElementById("title2").style.display = "inline-block";
-      document.getElementById("copy1").style.display  = "inline-block";
-      document.getElementById("text1").style.display  = "inline-block";
       document.getElementById("copy2").style.display  = "inline-block";
       document.getElementById("text2").style.display  = "inline-block";
     }
@@ -275,7 +277,7 @@ Nocturne.TTLock.API.add_passcode("${name}", "${starttm}", "${endtm}", nil, [${lo
           Code:
         </td>
         <td>
-          <input id="code" name="code" autocomplete="off" required/>
+          <input id="code" name="code" autocomplete="off"/>
         </td>
       </tr>
       <tr>
