@@ -126,7 +126,7 @@
       // Nocturne Unit B             │ Nocturne B  │  541356 │ 11046340
       // Nocturne Front Door         │ Nocturne AB │  541358 │ 11045754
       const passage  = unit == 'house'
-                     ? '\nNocturne.TTLock.API.set_passage_mode([11062924, 11061662, 11046340], true)\n'
+                     ? '\nNocturne.API.TTLock.set_passage_mode([11062924, 11061662, 11046340], true)\n'
                      : ''
                       
       const parking  = unit == 'house'
@@ -171,7 +171,7 @@ Looking forward to hosting you at our place!
 Enjoy your stay!
 `
       text2.innerHTML =
-`Nocturne.TTLock.API.add_passcode("${name}", "${starttm}", "${endtm}", ${codex}, [${locks}])${passage}`
+`Nocturne.API.TTLock.add_passcode("${name}", "${starttm}", "${endtm}", ${codex}, [${locks}])${passage}`
 
       if (code != '') {
         document.getElementById("title1").style.display = "inline-block";
