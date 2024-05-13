@@ -117,10 +117,11 @@
       const checkout = '10am'
       const starttm  = formatDate(from, checkin)
       const endtm    = formatDate(to,   checkout)
-      const locks    = unit == 'house'  ? [11045754, 11061662, 11062924, 11046340]
-                     : unit == 'Unit A' ? [11045754, 11061662, 11062924]
-                                        : [11045754, 11046340]
+      const locks    = unit == 'house'  ? [11045754, 11061662, 11062924, 14954032, 11046340]
+                     : unit == 'Unit A' ? [11045754, 11061662, 11062924, 14954032]
+                                        : [11045754, 14954032, 11046340]
       //            Lock             │    Group    │ GroupID │  LockID
+      // Nocturne Garage             │ Nocturne A  │  541354 │ 14954032
       // Nocturne Garage into Unit A │ Nocturne A  │  541354 │ 11062924
       // Nocturne Unit A             │ Nocturne A  │  541354 │ 11061662
       // Nocturne Unit B             │ Nocturne B  │  541356 │ 11046340
