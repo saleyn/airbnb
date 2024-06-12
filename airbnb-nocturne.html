@@ -172,7 +172,7 @@ Looking forward to hosting you at our place!
 Enjoy your stay!
 `
       text2.innerHTML =
-`Lemax.API.TTLock.add_passcode("${name}", "${starttm}", "${endtm}", ${codex}, [${locks}])${passage}`
+        `Lemax.API.TTLock.add_passcode("${name}", "${starttm}", "${endtm}", ${codex}, %{lock_id: [${locks}]})${passage}`
 
       if (code != '') {
         document.getElementById("title1").style.display = "inline-block";
