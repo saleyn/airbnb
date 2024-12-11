@@ -43,7 +43,7 @@
 
     function parse() {
       const item = document.getElementById("reservation")
-      const rx   = /^\s*([^ ]+)[^\n]+\s*\n\s*([^\n]+)\s*\n([A-Z][a-z][a-z])[. ]+(\d+)\s[-–]\s([A-Z][a-z][a-z])?\s*(\d+).*/;
+      const rx   = /^\s*([^ ]+)[^\n]+\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?,\s+\d+)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+,\s+\d+))?.*/;
       const res  = rx.exec(item.value);
       if (res) {
         if (res[2].includes("Beautiful 2BR/1BA"))
@@ -52,12 +52,17 @@
           unit = "Unit A"
         else if (res[2].includes("Your Dream Dual-Zone"))
           unit = "house"
+        else if (res[2].includes("Couver A"))
+          unit = "Unit 2051"
+        else if (res[2].includes("Couver B"))
+          unit = "Unit 2049"
+        else if (res[2].includes("Couver C"))
+          unit = "Studio"
         else
           unit = ""
 
         name = res[1]
-        from = `${res[3]} ${res[4]}`
-        to   = res[5] ? `${res[5]} ${res[6]}` : `${res[3]} ${res[6]}`
+        const [from, to] = parseDates(res[3], res[4])
 
         document.getElementById("unit").value     = unit
         document.getElementById("name").value     = name
@@ -66,6 +71,14 @@
         document.getElementById("code").value     = ''
         document.getElementById("garage").value   = ''
       }
+    }
+
+    function parseDates(dt1, dt2) {
+      // Input examples: "Feb 15 – 18, 2025", "Feb 15, 2025"
+      const  rx  = /^(([A-Z][a-z][a-z])\s+\d+)(?:[  ]*[-–][  ]*(\d+))?, (\d+)$/
+      const  res = rx.exec(dt1)
+      console.log(res)
+      return (!res || !res[3]) ? [dt1, dt2] : [`${res[1]}, ${res[4]}`, `${res[2]} ${res[3]}, ${res[4]}`]
     }
 
     function copyToClipboard(id) {
