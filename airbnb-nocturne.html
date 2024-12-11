@@ -43,7 +43,19 @@
 
     function parse() {
       const item = document.getElementById("reservation")
-      const rx   = /^\s*([^ ]+)[^\n]+\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?,\s+\d+)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+,\s+\d+))?.*/;
+      // Sample input:
+
+      //   First LastName
+      //   First's profile photo
+      //   Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
+      //   Dec 21 – 28 (7 nights)
+
+      //   First LastName
+      //   First's profile photo
+      //   Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
+      //   Dec 21, 2024 - Jan 10, 2025
+
+      const rx   = /^\s*([^ ]+)[^\n]+\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)))?.*/;
       const res  = rx.exec(item.value);
       if (res) {
         if (res[2].includes("Beautiful 2BR/1BA"))
@@ -75,10 +87,12 @@
 
     function parseDates(dt1, dt2) {
       // Input examples: "Feb 15 – 18, 2025", "Feb 15, 2025"
-      const  rx  = /^(([A-Z][a-z][a-z])\s+\d+)(?:[  ]*[-–][  ]*(\d+))?, (\d+)$/
+      const  rx  = /^(([A-Z][a-z][a-z])\s+\d+)(?:[  ]*[-–][  ]*(\d+))?(?:, (\d+))?$/
       const  res = rx.exec(dt1)
       console.log(res)
-      return (!res || !res[3]) ? [dt1, dt2] : [`${res[1]}, ${res[4]}`, `${res[2]} ${res[3]}, ${res[4]}`]
+      if (!res || !res[3]) return [dt1, dt2]
+      if (res[4])          return [`${res[1]}, ${res[4]}`, `${res[2]} ${res[3]}, ${res[4]}`]
+      return [res[1], `${res[2]} ${res[3]}`]
     }
 
     function copyToClipboard(id) {
