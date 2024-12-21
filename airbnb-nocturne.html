@@ -29,7 +29,17 @@
         event.preventDefault();
       })
 
+      clear()
       hide()
+    }
+
+    function clear() {
+      document.getElementById("unit").value     = ''
+      document.getElementById("name").value     = ''
+      document.getElementById("dt-from").value  = ''
+      document.getElementById("dt-to").value    = ''
+      document.getElementById("code").value     = ''
+      document.getElementById("garage").value   = ''
     }
 
     function hide() {
@@ -40,6 +50,14 @@
       document.getElementById("copy2").style.display  = 'none';
       document.getElementById("text2").style.display  = 'none';
     }
+
+    var unit
+    var unitDescr
+    var addr
+    var opts
+    var mapUrl
+    var lockEnableInfo
+    var entryDir = ''
 
     function parse() {
       const item = document.getElementById("reservation")
@@ -58,22 +76,39 @@
       const rx   = /^\s*([^ ]+)[^\n]+\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)))?.*/;
       const res  = rx.exec(item.value);
       if (res) {
-        if (res[2].includes("Beautiful 2BR/1BA"))
-          unit = "Unit B"
-        else if (res[2].includes("Beautiful 2BR/1.5BA"))
-          unit = "Unit A"
-        else if (res[2].includes("Your Dream Dual-Zone"))
-          unit = "house"
-        else if (res[2].includes("Couver A"))
-          unit = "Unit 2051"
-        else if (res[2].includes("Couver B"))
-          unit = "Unit 2049"
-        else if (res[2].includes("Couver C"))
-          unit = "Studio"
-        else
-          unit = ""
+        if      (res[2].includes("Your Dream Dual-Zone")) {
+          unit      = 'nocturne-house'
+          unitDescr = 'house'
+        } else if (res[2].includes("Beautiful 2BR/1.5BA")) {
+          unit      = 'nocturne-A'
+          unitDescr = 'Unit A'
+        } else if (res[2].includes("Beautiful 2BR/1BA")) {
+          unit      = "nocturne-B"
+          unitDescr = 'Unit B'
+        } else if (res[2].includes("Couver House")) {
+          unit      = "couver-house"
+          unitDescr = 'house'
+        } else if (res[2].includes("Couver AC")) {
+          unit      = "couver-AC" // 3BR
+          unitDescr = 'Unit 3BR'
+        } else if (res[2].includes("Couver A")) {
+          unit      = "couver-A"  // 2BR
+          unitDescr = 'Unit A'
+        } else if (res[2].includes("Couver B")) {
+          unit      = "couver-B"  // 2BR
+          unitDescr = 'Unit B'
+          entryDir  = '\nThe entrance is at the back of the house. Walk through the gate on the <span style="color:green; font-weight: bold;">LEFT</span> side.\n'
+        } else if (res[2].includes("Couver C")) {
+          unit      = "couver-C"  // Studio
+          unitDescr = 'Studio'
+          entryDir  = '\nThe entrance is at the back of the house. Walk through the gate on the <span style="color:green; font-weight: bold;">RIGHT</span> side.\n'
+        } else {
+          unit      = ''
+          unitDescr = res[2]
+          addr      = ''
+        }
 
-        name = res[1]
+        const name  = res[1]
         const [from, to] = parseDates(res[3], res[4])
 
         document.getElementById("unit").value     = unit
@@ -82,6 +117,43 @@
         document.getElementById("dt-to").value    = to
         document.getElementById("code").value     = ''
         document.getElementById("garage").value   = ''
+
+        if (unit.indexOf('nocturne') >= 0) {
+          addr = '3041 Nocturne Rd'
+          opts = [
+            ['nocturne-house', 'House'],
+            ['nocturne-A',     'Unit A'],
+            ['nocturne-B',     'Unit B']
+          ]
+          mapUrl = 'https://maps.app.goo.gl/QdqboXMY8entshxRA'
+          lockEnableInfo = 'Press # on the keypad'
+
+          document.getElementById('garage-row').style.display = ''
+          document.getElementById('garage').disabled = false;
+        } else {
+          addr = unit == 'couver-B' ? '2049 Couver Dr' : '2051 Couver Dr'
+          opts = [
+            ['couver-house', 'House'],
+            ['couver-A',     'Unit A 2BR'],
+            ['couver-B',     'Unit B 2BR'],
+            ['couver-AC',    'Unit AC 3BR'],
+            ['couver-C',     'Studio']
+          ]
+          mapUrl = 'https://maps.app.goo.gl/xAP9CVNCwUjq5tjX7'
+          lockEnableInfo = 'Touch the keypad, wait until it lights up'
+
+          document.getElementById('garage-row').style.display = 'none'
+          document.getElementById('garage').disabled = true;
+        }
+
+        const select = document.getElementById('unit')
+        opts.map( ([val, disp], i) => {
+          let o = document.createElement("option")
+          o.value = val; // the index
+          o.innerHTML = disp
+          select.append(o)
+        });
+        select.value = unit
       }
     }
 
@@ -89,7 +161,7 @@
       // Input examples: "Feb 15 – 18, 2025", "Feb 15, 2025"
       const  rx  = /^(([A-Z][a-z][a-z])\s+\d+)(?:[  ]*[-–][  ]*(\d+))?(?:, (\d+))?$/
       const  res = rx.exec(dt1)
-      console.log(res)
+      //console.log(res)
       if (!res || !res[3]) return [dt1, dt2]
       if (res[4])          return [`${res[1]}, ${res[4]}`, `${res[2]} ${res[3]}, ${res[4]}`]
       return [res[1], `${res[2]} ${res[3]}`]
@@ -126,6 +198,8 @@
       return toISOString(dt)
     }
 
+    function throw_error(str) { throw new Error(str) }
+
     function submit() {
       const text1    = document.getElementById("text1")
       const text2    = document.getElementById("text2")
@@ -136,31 +210,40 @@
       const code     = document.getElementById("code").value
       const garage   = document.getElementById("garage").value
       const url      = document.getElementById("url").checked
-      const side     = unit == 'Unit A' ? 'RIGHT' : 'LEFT'
-      const parkurl  = unit == 'Unit A' ? 'http://tinyurl.com/nocturne-ga'
-                                        : 'http://tinyurl.com/nocturne-gb'
+      const side     = unit == 'nocturne-A' ? 'RIGHT' : 'LEFT'
+      const parkurl  = unit == 'nocturne-A' ? 'http://tinyurl.com/nocturne-ga'
+                                            : 'http://tinyurl.com/nocturne-gb'
       const codex    = code == "" ? "nil" : `"${code}"`
-      const checkin  = unit == 'house'  ? '4pm' : '3pm'
+      const checkin  = unit.indexOf('house') > 0 ? '4pm' : '3pm'
       const checkout = '10am'
       const starttm  = formatDate(from, checkin)
       const endtm    = formatDate(to,   checkout)
-      const locks    = unit == 'house'  ? [11045754, 11061662, 11062924, 14954032, 11046340]
-                     : unit == 'Unit A' ? [11045754, 11061662, 11062924, 14954032]
-                                        : [11045754, 14954032, 11046340]
+      const locks    = unit == 'nocturne-house'  ? [11045754, 11061662, 11062924, 14954032, 11046340]
+                     : unit == 'nocturne-A'      ? [11045754, 11061662, 11062924, 14954032]
+                     : unit == 'nocturne-B'      ? [11045754, 14954032, 11046340]
+                     : unit == 'couver-house'    ? [18672332, 18722056, 19186066]
+                     : unit == 'couver-A'        ? [18672332]
+                     : unit == 'couver-AC'       ? [18672332, 19186066]
+                     : unit == 'couver-B'        ? [18722056]
+                     : unit == 'couver-C'        ? [19186066]
+                     : throw_error(`Invalid unit value: "${unit}"`)
+
       //            Lock             │    Group    │ GroupID │  LockID
       // Nocturne Garage             │ Nocturne A  │  541354 │ 14954032
       // Nocturne Garage into Unit A │ Nocturne A  │  541354 │ 11062924
       // Nocturne Unit A             │ Nocturne A  │  541354 │ 11061662
       // Nocturne Unit B             │ Nocturne B  │  541356 │ 11046340
       // Nocturne Front Door         │ Nocturne AB │  541358 │ 11045754
-      const passage  = unit == 'house'
-                     ? '\nLemax.API.TTLock.set_passage_mode([11062924, 11061662, 11046340], true)\n'
+      const passage  = unit == 'nocturne-house' ? '\nLemax.API.TTLock.set_passage_mode([11062924, 11061662, 11046340], true)\n'
+                     : unit == 'couver-house'   ? ''
                      : ''
                       
-      const parking  = unit == 'house'
+      const parking  = unit.indexOf('house') > 0
         ? ''
-        : `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl} target="_blank"">${parkurl}</a>\n`
-      const passthr = unit == 'house'
+        : unit.indexOf('nocturne') > 0
+        ? `\nYou can park your car on the ${side} side of the garage and the driveway: <a href="${parkurl} target="_blank"">${parkurl}</a>\n`
+        : ''
+      const passthr = unit == 'nocturne-house'
         ? ' All inside door locks have been set to the "pass-through" mode, and do not require to enter the access code.'
         : ''
       const nocturne = url
@@ -176,28 +259,34 @@
         ? `<a href="http://tinyurl.com/nocturne-rules" target="_blank">the house rules</a>`
         : `the house rules (http://tinyurl.com/nocturne-rules)`
 
+      const garageInfo = unit.indexOf('nocturne') >= 0
+        ? `
+          Here are the instructions for the garage:
+           
+          Please download ${smartapp} and register an account using your email address (during registration you will receive a verification code used to validate your account).
+          Step-by-step instructions ${garinstr}.
+          In the Smart Life app go to "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span
+          style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
+          This invitation code is valid within 3 days from now, and please don't share it with others.
+          ${parking}
+          Please read ${houserules}.
+          `.replace(/[ ]{10}/g, '')
+        : ''
+
       text1.innerHTML =
-`Hi ${name}!
-Your access code for ${nocturne} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
-(Press # on the keypad, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
-
-It will be valid during this period:
-Check-in  time ${from}, ${checkin}.
-Check-out time ${to}, ${checkout}.
-
-Here are the instructions for the garage:
-
-Please download ${smartapp} and register an account using your email address (during registration you will receive a verification code used to validate your account).
-Step-by-step instructions ${garinstr}.
-In the Smart Life app go to "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span
-style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
-This invitation code is valid within 3 days from now, and please don't share it with others.
-${parking}
-Please read ${houserules}.
-
-Looking forward to hosting you at our place!
-Enjoy your stay!
-`
+        `Hi ${name}!
+        Your access code for ${addr} ${unitDescr} is <span style="font-size:1.2em; color:red; font-weight: bold;">#${code}#</span>
+        (${lockEnableInfo}, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
+        It will be valid during this period:
+        Check-in  time ${from}, ${checkin}.
+        Check-out time ${to}, ${checkout}.
+        ${entryDir}
+        ${garageInfo}
+        Looking forward to hosting you at our place!
+        Enjoy your stay!
+        `.replace(/[ ]{8}/g, '')
+         .replace(/\n\n\n/g, '\n\n')
+        
       text2.innerHTML =
         `Lemax.API.TTLock.add_passcode("${name}", "${starttm}", "${endtm}", ${codex}, %{lock_id: [${locks}]})${passage}`
 
@@ -272,9 +361,6 @@ Enjoy your stay!
         <td>
           <select id="unit" name="unit" required>
             <option value=""></option>
-            <option value="house">House</option>
-            <option value="Unit A">Unit A</option>
-            <option value="Unit B">Unit B</option>
           </select>
         </td>
       </tr>
@@ -308,7 +394,7 @@ Enjoy your stay!
           <input id="code" name="code" autocomplete="off"/>
         </td>
       </tr>
-      <tr>
+      <tr id="garage-row">
         <td>
           Garage Code:
         </td>
