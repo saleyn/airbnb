@@ -111,11 +111,11 @@
           locks     = [18672332, 18722056, 19186066]
         } else if (res[2].includes("Couver AC")) {
           unit      = "couver-AC" // 3BR
-          unitDescr = 'Unit 3BR'
+          unitDescr = 'Unit 3BR (front door)'
           locks     = [18672332, 19186066]
         } else if (res[2].includes("Couver A")) {
           unit      = "couver-A"  // 2BR
-          unitDescr = 'Unit A'
+          unitDescr = 'Unit A (front door)'
           locks     = [18672332]
         } else if (res[2].includes("Couver B")) {
           unit      = "couver-B"  // 2BR
@@ -261,7 +261,7 @@
       const parkurl  = unit == 'nocturne-A' ? 'http://tinyurl.com/nocturne-ga'
                                             : 'http://tinyurl.com/nocturne-gb'
       const codex    = code == "" ? "nil" : `"${code}"`
-      const checkin  = unit.indexOf('house') > 0 ? '4pm' : '3pm'
+      const checkin  = unit.indexOf('house') > 0 || unit.indexOf('couver') ? '4pm' : '3pm'
       const checkout = '10am'
       const starttm  = formatDate(from, checkin)
       const endtm    = formatDate(to,   checkout)
