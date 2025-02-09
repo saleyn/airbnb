@@ -3,8 +3,9 @@
   <title>AirBnB Guest Check-In Instructions</title>
   <script>
     window.onload = function() {
-      const query_string = window.location.search;
-      const params = new URLSearchParams(query_string);
+      clear()
+      const query_string = window.location.search
+      const params = new URLSearchParams(query_string)
       const unit   = params.get("unit")
       const name   = params.get("name")
       const from   = params.get("from")
@@ -31,7 +32,6 @@
         event.preventDefault();
       })
 
-      clear()
       hide()
     }
 
