@@ -261,7 +261,7 @@
       const parkurl  = unit == 'nocturne-A' ? 'http://tinyurl.com/nocturne-ga'
                                             : 'http://tinyurl.com/nocturne-gb'
       const codex    = code == "" ? "nil" : `"${code}"`
-      const checkin  = unit.indexOf('house') > 0 || unit.indexOf('couver') ? '4pm' : '3pm'
+      const checkin  = (unit.indexOf('house') > 0 || unit.indexOf('couver')) ? '4pm' : '3pm'
       const checkout = '10am'
       const starttm  = formatDate(from, checkin)
       const endtm    = formatDate(to,   checkout)
@@ -281,9 +281,6 @@
       const nocturne = url
         ? `<a href="https://maps.app.goo.gl/QdqboXMY8entshxRA" target="_blank">3041 Nocturne ${unit}</a>`
         : `3041 Nocturne ${unit} (https://maps.app.goo.gl/QdqboXMY8entshxRA)`
-      const smartapp = url
-        ? `[<a href="https://app-support-us.smart321.com/smartlife" target="_blank">Smart Life App</a>]`
-        : `Smart Life App (https://app-support-us.smart321.com/smartlife)`
       const garinstr = url
         ? `<a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>`
         : `are provided here (https://tinyurl.com/nocturne-garage)`
@@ -295,7 +292,9 @@
         ? `
           Here are the instructions for the garage:
            
-          Please download ${smartapp} and register an account using your email address (during registration you will receive a verification code used to validate your account).
+          Please download "Smart Life - Smart Living" application from the Google/Apple App Store
+          and register an account using your email address (during registration
+          you will receive a verification code used to validate your account).
           Step-by-step instructions ${garinstr}.
           In the Smart Life app go to "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span
           style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
