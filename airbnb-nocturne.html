@@ -283,7 +283,8 @@
         : `3041 Nocturne ${unit} (https://maps.app.goo.gl/QdqboXMY8entshxRA)`
       const smartapp = url
         ? `[<a href="https://play.google.com/store/apps/details?id=com.tuya.smartlife" target="_blank">Android</a>, <a href="https://apps.apple.com/us/app/smart-life-smart-living/id1115101477" target="_blank">Apple</a>]`
-        : `(Apple: https://apps.apple.com/us/app/smart-life-smart-living/id1115101477, Android: https://play.google.com/store/apps/details?id=com.tuya.smartlife)`
+        : `(Apple: https://apps.apple.com/us/app/smart-life-smart-living/id1115101477,
+            Android: https://play.google.com/store/apps/details?id=com.tuya.smartlife)`
       const garinstr = url
         ? `<a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>`
         : `are provided here (https://tinyurl.com/nocturne-garage)`
@@ -295,10 +296,13 @@
         ? `
           Here are the instructions for the garage:
            
-          Please download Smart Life App ${smartapp} and register an account using your email address (during registration you will receive a verification code used to validate your account).
+          Please download Smart Life App ${smartapp}
+          and register an account using your email address (during registration
+          you will receive a verification code used to validate your account).
           Step-by-step instructions ${garinstr}.
-          In the Smart Life app go to "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span
-          style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
+          In the Smart Life app go to
+          "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code:
+          <span style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
           This invitation code is valid within 3 days from now, and please don't share it with others.
           ${parking}
           Please read ${houserules}.
