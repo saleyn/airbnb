@@ -195,6 +195,8 @@
       }
 
       const select = document.getElementById('unit')
+      while (select.options.length > 0) select.remove(0);
+
       opts.map( ([val, disp], i) => {
         let o = document.createElement("option")
         o.value = val; // the index
