@@ -113,10 +113,19 @@
           unit      = "couver-AC" // 3BR
           unitDescr = 'Unit 3BR (front door)'
           locks     = [18672332, 19186066]
+          entryDir  = `\nPlease park your car either on the
+                      <span style="color:green; font-weight: bold;">RIGHT</span> side of the left
+                      driveway in front of the entrance door, or on the right section of the
+                      driveway facing the white fence on the right of the house.`
+                      .replace(/\n +/g, ' ')
         } else if (res[2].includes("Couver A")) {
           unit      = "couver-A"  // 2BR
           unitDescr = 'Unit A (front door)'
           locks     = [18672332]
+          entryDir  = `\nPlease park your car on the
+                      <span style="color:green; font-weight: bold;">RIGHT</span> side of the left
+                      section of the driveway in front of the entrance door. The left
+                      side of the driveway is reserved for the guests of the unit 2049.`
         } else if (res[2].includes("Couver B")) {
           unit      = "couver-B"  // 2BR
           unitDescr = 'Unit B'
@@ -285,8 +294,8 @@
         : `3041 Nocturne ${unit} (https://maps.app.goo.gl/QdqboXMY8entshxRA)`
       const smartapp = url
         ? `[<a href="https://play.google.com/store/apps/details?id=com.tuya.smartlife" target="_blank">Android</a>, <a href="https://apps.apple.com/us/app/smart-life-smart-living/id1115101477" target="_blank">Apple</a>]`
-        : `(Apple: https://apps.apple.com/us/app/smart-life-smart-living/id1115101477,
-            Android: https://play.google.com/store/apps/details?id=com.tuya.smartlife)`
+        : "\n  * Apple: https://apps.apple.com/us/app/smart-life-smart-living/id1115101477\n" +
+          "  * Android: https://play.google.com/store/apps/details?id=com.tuya.smartlife\n"
       const garinstr = url
         ? `<a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>`
         : `are provided here (https://tinyurl.com/nocturne-garage)`
@@ -298,13 +307,13 @@
         ? `
           Here are the instructions for the garage:
            
-          Please download Smart Life App ${smartapp}
-          and register an account using your email address (during registration
+          1. Please download Smart Life App ${smartapp}
+          2. Register an account using your email address (during registration
           you will receive a verification code used to validate your account).
+
           Step-by-step instructions ${garinstr}.
           In the Smart Life app go to
-          "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code:
-          <span style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
+          "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
           This invitation code is valid within 3 days from now, and please don't share it with others.
           ${parking}
           Please read ${houserules}.
