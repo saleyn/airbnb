@@ -54,7 +54,7 @@
     }
 
     var unit
-    var unitDescr
+    var unitSfx
     var addr
     var opts
     var mapUrl
@@ -92,26 +92,26 @@
       if (res) {
         if      (res[2].includes("Your Dream Dual-Zone")) {
           unit      = 'nocturne-house'
-          unitDescr = 'house'
+          unitSfx   = 'house'
           codePfx   = '#'
           locks     = [11045754, 11061662, 11062924, 14954032, 11046340]
         } else if (res[2].includes("Beautiful 2BR/1.5BA")) {
           unit      = 'nocturne-A'
-          unitDescr = 'Unit A'
+          unitSfx   = 'Unit A'
           codePfx   = '#'
           locks     = [11045754, 11061662, 11062924, 14954032]
         } else if (res[2].includes("Beautiful 2BR/1BA")) {
           unit      = "nocturne-B"
-          unitDescr = 'Unit B'
+          unitSfx   = 'Unit B'
           codePfx   = '#'
           locks     = [11045754, 14954032, 11046340]
         } else if (res[2].includes("Couver House")) {
           unit      = "couver-house"
-          unitDescr = 'house'
+          unitSfx   = 'house'
           locks     = [18672332, 18722056, 19186066]
         } else if (res[2].includes("Couver AC")) {
           unit      = "couver-AC" // 3BR
-          unitDescr = 'Unit 3BR (front door)'
+          unitSfx   = ' (front door)'
           locks     = [18672332, 19186066]
           entryDir  = `\nPlease park your car either on the
                       <span style="color:green; font-weight: bold;">RIGHT</span> side of the left
@@ -120,7 +120,7 @@
                       .replace(/\n +/g, ' ')
         } else if (res[2].includes("Couver A")) {
           unit      = "couver-A"  // 2BR
-          unitDescr = 'Unit A (front door)'
+          unitSfx   = ' (front door)'
           locks     = [18672332]
           entryDir  = `\nPlease park your car on the
                       <span style="color:green; font-weight: bold;">RIGHT</span> side of the left
@@ -128,7 +128,7 @@
                       side of the driveway is reserved for the guests of the unit 2049.`
         } else if (res[2].includes("Couver B")) {
           unit      = "couver-B"  // 2BR
-          unitDescr = 'Unit B'
+          // unitSfx = 'Unit B'
           locks     = [18722056]
           entryDir  = `\nPlease park your car on the
                       <span style="color:green; font-weight: bold;">LEFT</span> side of the driveway.
@@ -138,7 +138,7 @@
                       .replace(/\n +/g, ' ')
         } else if (res[2].includes("Couver C")) {
           unit      = "couver-C"  // Studio
-          unitDescr = 'Studio'
+          unitSfx   = ' Studio'
           locks     = [19186066]
           entryDir  = `\nPlease park your car on the
                       <span style="color:green; font-weight: bold;">RIGHT</span> side of the driveway.
@@ -153,7 +153,6 @@
 
       if (!ok) {
         unit      = ''
-        unitDescr = ''
         addr      = ''
         document.getElementById('error').style.display  = 'inline-block'
         document.getElementById('error-text').innerHTML =
@@ -322,7 +321,7 @@
 
       text1.innerHTML =
         `Hi ${name}!
-        Your access code for ${addr} ${unitDescr} is <span style="font-size:1.2em; color:red; font-weight: bold;">${codePfx}${code}#</span>
+        Your access code for ${addr}${unitSfx} is <span style="font-size:1.2em; color:red; font-weight: bold;">${codePfx}${code}#</span>
         (${lockEnableInfo}, then enter your passcode and press #. The # key is the UNLOCKING key on the keypad.)${passthr}
         It will be valid during this period:
         Check-in  time ${from}, ${checkin}.
