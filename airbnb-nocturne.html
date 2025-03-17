@@ -113,29 +113,27 @@
           unit      = "couver-AC" // 3BR
           unitSfx   = ' (front door)'
           locks     = [18672332, 19186066]
-          entryDir  = `\nPlease park your car either on the
-                      <span style="color:green; font-weight: bold;">RIGHT</span> side of the left
-                      driveway in front of the entrance door, or on the right section of the
-                      driveway facing the white fence on the right of the house.`
+          entryDir  = `\nParking: in front of the entrance door or at the right side
+                      of the house. Note that the left section of the driveway in
+                      front of the 2049 gate is reserved for guests in
+                      the other unit.\n`
                       .replace(/\n +/g, ' ')
         } else if (res[2].includes("Couver A")) {
           unit      = "couver-A"  // 2BR
           unitSfx   = ' (front door)'
           locks     = [18672332]
-          entryDir  = `\nPlease park your car on the
-                      <span style="color:green; font-weight: bold;">RIGHT</span> side of the left
-                      section of the driveway in front of the entrance door. The left
-                      side of the driveway is reserved for the guests of the unit 2049.`
+          entryDir  = `\nParking: in front of the entrance door. Note that the left
+                      section of the driveway in front of the 2049 gate is reserved
+                      for guests in the other unit.\n`
                       .replace(/\n +/g, ' ')
         } else if (res[2].includes("Couver B")) {
           unit      = "couver-B"  // 2BR
           // unitSfx = 'Unit B'
           locks     = [18722056]
           entryDir  = `\nPlease park your car on the
-                      <span style="color:green; font-weight: bold;">LEFT</span> side of the driveway.
-                      Walk through the gate on the
-                      <span style="color:green; font-weight: bold;">LEFT</span>
-                      side of the house. The entrance is the white door at the rear.\n`
+                      <span style="color:green; font-weight: bold;">LEFT</span> side of the driveway
+                      in front of the 2049 gate. Walk through that gate to the back of
+                      the house to access the white entrace door.\n`
                       .replace(/\n +/g, ' ')
         } else if (res[2].includes("Couver C")) {
           unit      = "couver-C"  // Studio
