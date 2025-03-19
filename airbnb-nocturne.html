@@ -63,6 +63,11 @@
     var codePfx  = ''
     var locks    = []
 
+    var home
+    var name
+    var fromDate
+    var toDate
+
     function parse() {
       const item = document.getElementById("reservation")
       // Sample input:
@@ -77,9 +82,24 @@
       //   Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
       //   Dec 21, 2024 - Jan 10, 2025
 
-      const rx   = /^(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
-      const res  = rx.exec(item.value);
+      let rx   = /^(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
+      let res  = rx.exec(item.value);
 
+      if (res) /* AirBnb */ {
+        name     = res[1]
+        home     = res[2]
+        fromDate = res[3]
+        toDate   = res[4]
+      } else /* VRBO */ {
+        rx       = /^Booked\n[^\n]+\n(?:\w+,\s+(\w{3}\s\d+))\s[-—]\s(?:\w+,\s+(\w{3}\s\d+))\n(?:[^\n]+\n){3}([\w ]+)\n(?:[^\n]+\n){3}(?:(\w+)\s\w+)\s*$$/
+        res      = rx.exec(item.value)
+        if (res) {
+          fromDate = res[1]
+          toDate   = res[2]
+          home     = res[3]
+          name     = res[4]
+        }
+      }
       //            Lock             │    Group    │ GroupID │  LockID
       // Nocturne Garage             │ Nocturne A  │  541354 │ 14954032
       // Nocturne Garage into Unit A │ Nocturne A  │  541354 │ 11062924
@@ -87,29 +107,29 @@
       // Nocturne Unit B             │ Nocturne B  │  541356 │ 11046340
       // Nocturne Front Door         │ Nocturne AB │  541358 │ 11045754
 
-      const ok = res
+      var ok = res
 
       if (res) {
-        if      (res[2].includes("Your Dream Dual-Zone")) {
+        if      (home.includes("Your Dream Dual-Zone") || home.includes('Nocturne House')) {
           unit      = 'nocturne-house'
           unitSfx   = ' house'
           codePfx   = '#'
           locks     = [11045754, 11061662, 11062924, 14954032, 11046340]
-        } else if (res[2].includes("Beautiful 2BR/1.5BA")) {
+        } else if (home.includes("Beautiful 2BR/1.5BA")) {
           unit      = 'nocturne-A'
           unitSfx   = ' Unit A'
           codePfx   = '#'
           locks     = [11045754, 11061662, 11062924, 14954032]
-        } else if (res[2].includes("Beautiful 2BR/1BA")) {
+        } else if (home.includes("Beautiful 2BR/1BA")) {
           unit      = "nocturne-B"
           unitSfx   = ' Unit B'
           codePfx   = '#'
           locks     = [11045754, 14954032, 11046340]
-        } else if (res[2].includes("Couver House")) {
+        } else if (home.includes("Couver House")) {
           unit      = "couver-house"
           unitSfx   = ' house'
           locks     = [18672332, 18722056, 19186066]
-        } else if (res[2].includes("Couver AC")) {
+        } else if (home.includes("Couver AC")) {
           unit      = "couver-AC" // 3BR
           unitSfx   = ' (front door)'
           locks     = [18672332, 19186066]
@@ -118,7 +138,7 @@
                       front of the 2049 gate is reserved for guests in
                       the other unit.\n`
                       .replace(/\n +/g, ' ')
-        } else if (res[2].includes("Couver A")) {
+        } else if (home.includes("Couver A")) {
           unit      = "couver-A"  // 2BR
           unitSfx   = ' (front door)'
           locks     = [18672332]
@@ -126,7 +146,7 @@
                       section of the driveway in front of the 2049 gate is reserved
                       for guests in the other unit.\n`
                       .replace(/\n +/g, ' ')
-        } else if (res[2].includes("Couver B")) {
+        } else if (home.includes("Couver B")) {
           unit      = "couver-B"  // 2BR
           // unitSfx = 'Unit B'
           locks     = [18722056]
@@ -135,7 +155,7 @@
                       in front of the 2049 gate. Walk through that gate to the back of
                       the house to access the white entrace door.\n`
                       .replace(/\n +/g, ' ')
-        } else if (res[2].includes("Couver C")) {
+        } else if (home.includes("Couver C")) {
           unit      = "couver-C"  // Studio
           unitSfx   = ' Studio'
           locks     = [19186066]
@@ -163,8 +183,7 @@
       document.getElementById('error').style.display = 'none'
       document.getElementById('submit').disabled = false
 
-      const name  = res[1]
-      const [from, to] = parseDates(res[3], res[4])
+      const [from, to] = parseDates(fromDate, toDate)
 
       document.getElementById("unit").value     = unit
       document.getElementById("name").value     = name
