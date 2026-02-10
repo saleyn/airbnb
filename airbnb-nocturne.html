@@ -82,7 +82,7 @@
       //   Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
       //   Dec 21, 2024 - Jan 10, 2025
 
-      let rx   = /^(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
+      let rx   = /^^(?:(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n)?\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
       let res  = rx.exec(item.value);
 
       if (res) /* AirBnb */ {
