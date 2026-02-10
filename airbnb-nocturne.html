@@ -82,7 +82,7 @@
       //   Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
       //   Dec 21, 2024 - Jan 10, 2025
 
-      let rx   = /^(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
+      let rx   = /^^(?:(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n)?\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
       let res  = rx.exec(item.value);
 
       if (res) /* AirBnb */ {
@@ -322,7 +322,9 @@
 
       const garageInfo = unit.indexOf('nocturne') >= 0
         ? `
-          Here are the instructions for the garage:
+          The garage can be opened/closed using a button located by the door
+          of the unit A. If you would like to be able to operate the garage door
+          using your phone, here are the instructions to install an app for it:
            
           1. Please download Smart Life App ${smartapp}
           2. Register an account using your email address (during registration
