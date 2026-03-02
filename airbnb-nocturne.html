@@ -289,7 +289,8 @@
       const parkurl  = unit == 'nocturne-A' ? 'http://tinyurl.com/nocturne-ga'
                                             : 'http://tinyurl.com/nocturne-gb'
       const codex    = code == "" ? "nil" : `"${code}"`
-      const checkin  = (unit.indexOf('house') > -1 || unit.indexOf('couver') > -1) ? '4pm' : '3pm'
+      // const checkin  = (unit.indexOf('house') > -1 || unit.indexOf('couver') > -1) ? '4pm' : '3pm'
+      const checkin  = '4pm'
       const checkout = '10am'
       const starttm  = formatDate(from, checkin)
       const endtm    = formatDate(to,   checkout)
