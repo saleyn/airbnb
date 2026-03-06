@@ -53,6 +53,84 @@
       document.getElementById("text2").style.display  = 'none';
     }
 
+    function parseVRBOBooking(str) {
+      // Sample input:
+      // Booked
+      // Res ID: XX-XXXXX
+      // Sun, Mar 8 — Thu, Mar 26
+      // 6 adults
+      // $1,000.00
+      // Expected payout for 18 nights
+      // Nocturne House
+      // Prop ID: 12345678
+      // Booked through Vrbo on Mon, Jul 21, 2024
+      // Modify or cancel reservation
+      // FirstName LastName
+      // 5 (1 review)
+      // +1 207-852-2827
+
+      // Booked
+      // First LastName
+      // Dec 21, 2024 - Jan 10, 2025
+      // Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
+      // (123) 456-7890
+      const rx = /^Booked\n[^\n]+\n(?:\w+,\s+(\w{3}\s\d+))\s[-—]\s(?:\w+,\s+(\w{3}\s\d+))\n(?:[^\n]+\n){3}([\w ]+)\n(?:[^\n]+\n){3}(?:(\w+)\s\w+)\s*$/
+      if (rx.test(str)) return rx.exec(str)
+
+      const lines = str.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+      let property = '';
+      let dateRange = '';
+      let guest = '';
+
+      // look for the date‑range line: e.g. "Sun, Mar 8 — Thu, Mar 26"
+      for (const l of lines) {
+        if (/^[A-Za-z]{3},\s+[A-Za-z]{3}\s+\d+\s+—\s+[A-Za-z]{3},\s+[A-Za-z]{3}\s+\d+/.test(l)) {
+          dateRange = l;
+          break;
+        }
+      }
+
+      // property name usually appears on its own line, often immediately
+      // before or after "Prop ID:"; grab the first non‑keyword line that
+      // isn’t one of the known headings.
+      for (let i = 0; i < lines.length; i++) {
+        if (/^Prop ID:/i.test(lines[i]) && i > 0) {
+          property = lines[i - 1]
+          break
+        }
+        if (/^Booked$/i.test(lines[i]) || /^Res ID:/i.test(lines[i]) ||
+            /^\d+\s+adults/i.test(lines[i]) || /^\$\d/.test(lines[i]) ||
+            /^Expected payout/i.test(lines[i]) ||
+            /^Booked through/i.test(lines[i]) ||
+            /^Modify or cancel/i.test(lines[i])) {
+          continue
+        }
+        // fallback: first “free” line after the header
+        if (!property && lines[i].length > 0) property = lines[i]
+      }
+
+      // guest name is generally the last full-name line before the phone/review
+      for (let i = lines.length - 1; i >= 0; i--) {
+        if (/^[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+$/.test(lines[i])) {
+          guest = lines[i];
+          break;
+        }
+      }
+
+      let startDate = '';
+      let endDate = '';
+      if (dateRange) {
+        const parts = dateRange.split('—').map(s => s.trim());
+        if (parts.length === 2) {
+          startDate = parts[0];
+          endDate = parts[1];
+        }
+      }
+
+      return [str, startDate, endDate, property, guest];
+    }
+
     var unit
     var unitSfx  = ''
     var addr
@@ -91,8 +169,7 @@
         fromDate = res[3]
         toDate   = res[4]
       } else /* VRBO */ {
-        rx       = /^Booked\n[^\n]+\n(?:\w+,\s+(\w{3}\s\d+))\s[-—]\s(?:\w+,\s+(\w{3}\s\d+))\n(?:[^\n]+\n){3}([\w ]+)\n(?:[^\n]+\n){3}(?:(\w+)\s\w+)\s*$/
-        res      = rx.exec(item.value)
+        res      = parseVRBOBooking(item.value)
         if (res) {
           fromDate = res[1]
           toDate   = res[2]
