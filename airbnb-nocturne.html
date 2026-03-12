@@ -131,6 +131,47 @@
       return [str, startDate, endDate, property, guest];
     }
 
+    function parseAirbnbBooking(str) {
+      let rx   = /^(?:(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n)?\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/
+
+      if (rx.test(str)) {
+        match = rx.exec(str)
+        // [str, name, home, fromDate, toDate]
+        const guestName = match[1] || null
+        const houseName = match[2] || null
+        const fromDate  = match[3] || null
+        const toDate    = match[4] || null
+
+        return [str, fromDate, toDate, houseName, guestName]
+      }
+
+      // -------------------------
+      // FALLBACK PARSER
+      // -------------------------
+      const lines = str.split("\n").map(l => l.trim()).filter(l => l.length > 0)
+
+      const guestLine      = lines[0]
+      const guestName      = guestLine.split("’")[0]
+      const dateLine       = lines[1]
+      const dateRangeMatch = dateLine.match(/([A-Za-z]+ \d+)\s*[\u2013-]\s*(\d+)/)
+      const nightsMatch    = dateLine.match(/(\d+)\s*nights/)
+
+      let   fromDate       = null
+      let   toDate         = null
+
+      if (dateRangeMatch) {
+        fromDate    = dateRangeMatch[1]
+        const toDay = dateRangeMatch[2]
+        const month = fromDate.split(" ")[0]
+        toDate      = `${month} ${toDay}`
+      }
+
+      //const nights  = nightsMatch ? parseInt(nightsMatch[1], 10) : null;
+      const houseName = lines[2]
+
+      return [str, fromDate, toDate, houseName, guestName]
+    }
+
     var unit
     var unitSfx  = ''
     var addr
@@ -160,23 +201,21 @@
       //   Nocturne House · Your Dream Dual-Zone Gateway with Private Pool
       //   Dec 21, 2024 - Jan 10, 2025
 
-      let rx   = /^^(?:(?:\s*Confirmed)?\s*([^\s]+)[^\n]*\s*\n)?\s*[^\n]+\s*\n\s*([^\n]+)\s*\n((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?.*/;
-      let res  = rx.exec(item.value);
+      //   Alexander’s group of 10
+      //   Mar 14 – 20 · 6 nights
+      //   Couver House · Cottage 2 zones 5BD/3BA: Close to Siesta Key
 
-      if (res) /* AirBnb */ {
-        name     = res[1]
-        home     = res[2]
-        fromDate = res[3]
-        toDate   = res[4]
-      } else /* VRBO */ {
-        res      = parseVRBOBooking(item.value)
-        if (res) {
-          fromDate = res[1]
-          toDate   = res[2]
-          home     = res[3]
-          name     = res[4]
-        }
+
+      let res = parseAirbnbBooking(item.value)
+             || parseVRBOBooking(item.value)
+
+      if (res) {
+        fromDate = res[1]
+        toDate   = res[2]
+        home     = res[3]
+        name     = res[4]
       }
+
       //            Lock             │    Group    │ GroupID │  LockID
       // Nocturne Garage             │ Nocturne A  │  541354 │ 14954032
       // Nocturne Garage into Unit A │ Nocturne A  │  541354 │ 11062924
