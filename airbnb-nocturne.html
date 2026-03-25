@@ -142,7 +142,7 @@
         const fromDate  = match[3] || null
         const toDate    = match[4] || null
 
-        return [str, fromDate, toDate, houseName, guestName]
+        return [str, fromDate, toDate, houseName, guestName, null]
       }
 
       // -------------------------
@@ -155,6 +155,8 @@
       const dateLine       = lines[1]
       const dateRangeMatch = dateLine.match(/([A-Za-z]+ \d+)\s*[\u2013-]\s*(\d+)/)
       const nightsMatch    = dateLine.match(/(\d+)\s*nights/)
+      const doorCodeMatch  = str.match(/Suggested door code\s*([\d]+)/i);
+      const doorCode       = doorCodeMatch ? doorCodeMatch[1] : null;
 
       let   fromDate       = null
       let   toDate         = null
@@ -169,7 +171,7 @@
       //const nights  = nightsMatch ? parseInt(nightsMatch[1], 10) : null;
       const houseName = lines[2]
 
-      return [str, fromDate, toDate, houseName, guestName]
+      return [str, fromDate, toDate, houseName, guestName, doorCode]
     }
 
     var unit
@@ -214,6 +216,7 @@
         toDate   = res[2]
         home     = res[3]
         name     = res[4]
+        doorCode = res[5] || null
       }
 
       //            Lock             │    Group    │ GroupID │  LockID
@@ -305,7 +308,7 @@
       document.getElementById("name").value     = name
       document.getElementById("dt-from").value  = from
       document.getElementById("dt-to").value    = to
-      document.getElementById("code").value     = ''
+      document.getElementById("code").value     = doorCode
       document.getElementById("garage").value   = ''
 
       if (unit.indexOf('nocturne') >= 0) {
