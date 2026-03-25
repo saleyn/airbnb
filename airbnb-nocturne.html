@@ -153,7 +153,7 @@
       const guestLine      = lines[0]
       const guestName      = guestLine.split("’")[0]
       const dateLine       = lines[1]
-      const dateRangeMatch = dateLine.match(/([A-Za-z]+ \d+)\s*[\u2013-]\s*(\d+)/)
+      const dateRangeMatch = dateLine.match(/((?:[A-Z][a-z][a-z])\s+\d+(?:[  ]*[-–][  ]*\d+)?(?:,\s+\d+)?)(?:(?:[  ]*[-–][  ]*)((?:[A-Z][a-z][a-z])\s*\d+(?:,\s+\d+)?))?/)
       const nightsMatch    = dateLine.match(/(\d+)\s*nights/)
       const doorCodeMatch  = str.match(/Suggested door code\s*([\d]+)/i);
       const doorCode       = doorCodeMatch ? doorCodeMatch[1] : null;
@@ -163,9 +163,8 @@
 
       if (dateRangeMatch) {
         fromDate    = dateRangeMatch[1]
-        const toDay = dateRangeMatch[2]
-        const month = fromDate.split(" ")[0]
-        toDate      = `${month} ${toDay}`
+        const toDay = dateRangeMatch[2] || dateRangeMatch[1].split(" ")[1]
+        toDate      = /^d+$/.test(toDay) ? `${fromDate.split(" ")[0]} ${toDay}` : toDay
       }
 
       //const nights  = nightsMatch ? parseInt(nightsMatch[1], 10) : null;
