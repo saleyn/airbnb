@@ -427,17 +427,17 @@
         : ''
       const nocturne = url
         ? `<a href="https://maps.app.goo.gl/QdqboXMY8entshxRA" target="_blank">3041 Nocturne ${unit}</a>`
-        : `3041 Nocturne ${unit} (https://maps.app.goo.gl/QdqboXMY8entshxRA)`
+        : `3041 Nocturne ${unit}: https://maps.app.goo.gl/QdqboXMY8entshxRA`
       const smartapp = url
         ? `[<a href="https://play.google.com/store/apps/details?id=com.tuya.smartlife" target="_blank">Android</a>, <a href="https://apps.apple.com/us/app/smart-life-smart-living/id1115101477" target="_blank">Apple</a>]`
         : "\n  * Apple: https://apps.apple.com/us/app/smart-life-smart-living/id1115101477\n" +
           "  * Android: https://play.google.com/store/apps/details?id=com.tuya.smartlife\n"
       const garinstr = url
         ? `<a href="https://tinyurl.com/nocturne-garage" target="_blank">are provided here</a>`
-        : `are provided here (https://tinyurl.com/nocturne-garage)`
+        : `are provided here: https://tinyurl.com/nocturne-garage`
       const houserules = url
         ? `<a href="http://tinyurl.com/nocturne-rules" target="_blank">the house rules</a>`
-        : `the house rules (http://tinyurl.com/nocturne-rules)`
+        : `the house rules: http://tinyurl.com/nocturne-rules`
 
       const garageInfo = unit.indexOf('nocturne') >= 0
         ? `
@@ -454,7 +454,7 @@
           "Me > Home Management > Join Home “Nocturne Guest”", and enter the Invitation Code: <span style="font-size:1.2em; color:red; font-weight: bold;">${garage}</span>.
           This invitation code is valid within 3 days from now, and please don't share it with others.
           ${parking}
-          Please read ${houserules}.
+          Please read ${houserules}
           `.replace(/[ ]{10}/g, '')
         : ''
 
